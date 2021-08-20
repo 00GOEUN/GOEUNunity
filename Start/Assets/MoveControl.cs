@@ -94,8 +94,34 @@ public class MoveControl : MonoBehaviour
         
          if(Input.GetMouseButton(1))
         {
+            // 레이저 = 마우스 포인터로 보냄
+            // 화면에 있는 마우스 위치로부터 Ray를 보내기위해 정보를 기록함
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-             if(this.transform.position.x > TargetPoint.x - 0.5f &&
+
+            // Ray가 타겟과 충돌했을 때 반환 값을 저장하는 곳
+            RaycastHit hit;
+
+            // 받아오기만 할때 out
+            // 입력만 할때 in
+            // Infinity : 무한
+            // if(Physics.Raycast(Ray 시작 위치와 방향, 충돌한 지점의 정보, Mathf.Infity : 무한한))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity)) // ray의 위치와 방향으로부터 RayPoint를 무한정으로 발사하고 충돌이 일어나면 Hit에 정보를 저장함 
+            {
+                if (hit.transform.tag == "Ground")
+                {
+                    // ray의 위치로주터 hit된 위치까지 선을 그림
+                    Debug.DrawLine(ray.origin, hit.point);
+                    Debug.Log(hit.point);
+
+                    //transform.position = new Vector3(hit.point.x, 1.0f, hit.point.z);
+                    TargetPoint = hit.point;
+                }
+            }
+
+
+
+            if (this.transform.position.x > TargetPoint.x - 0.5f &&
                 this.transform.position.x < TargetPoint.x + 0.5f && 
                 this.transform.position.z > TargetPoint.z - 0.5f && 
                 this.transform.position.z < TargetPoint.z + 0.5f) 
@@ -110,50 +136,31 @@ public class MoveControl : MonoBehaviour
 
                 Step = TargetPoint - this.transform.position;
                 Step.Normalize();
-
+                Step.y = 0;
                 
             }
 
              if(Move == true)
             {
-                this.transform.LookAt(Step);
+                //this.transform.LookAt(Step);
                 this.transform.position += Step;
 
                 if (this.transform.position.x > TargetPoint.x - 0.5f &&
-                this.transform.position.x < TargetPoint.x + 0.5f &&
-                this.transform.position.z > TargetPoint.z - 0.5f &&
-                this.transform.position.z < TargetPoint.z + 0.5f)
+                    this.transform.position.x < TargetPoint.x + 0.5f &&
+                    this.transform.position.z > TargetPoint.z - 0.5f &&
+                    this.transform.position.z < TargetPoint.z + 0.5f)
                 {
                     Move = false;
+                    Step.y = 0;
+
                 }
 
             }
 
 
-            /*
-            // 레이저 = 마우스 포인터로 보냄
-            // 화면에 있는 마우스 위치로부터 Ray를 보내기위해 정보를 기록함
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-
-            // Ray가 타겟과 충돌했을 때 반환 값을 저장하는 곳
-            RaycastHit hit;
-
-            // 받아오기만 할때 out
-            // 입력만 할때 in
-            // Infinity : 무한
-            // if(Physics.Raycast(Ray 시작 위치와 방향, 충돌한 지점의 정보, Mathf.Infity : 무한한))
-            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) // ray의 위치와 방향으로부터 RayPoint를 무한정으로 발사하고 충돌이 일어나면 Hit에 정보를 저장함 
-            {
-                if (hit.transform.tag == "Ground")
-                {
-                    // ray의 위치로주터 hit된 위치까지 선을 그림
-                    Debug.DrawLine(ray.origin, hit.point);
-                    Debug.Log(hit.point);
-
-                    //transform.position = new Vector3(hit.point.x, 1.0f, hit.point.z);
-                    TargetPoint = hit.point;
-             */
+            
+           
+            
                 
 
                 /*
@@ -170,8 +177,6 @@ public class MoveControl : MonoBehaviour
                 
                 // 충돌한 위치를 출력
                 Debug.Log(hit.point);
-                }
-            }
                 */
         }
 
