@@ -2,28 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// public 사용 자제
+// [SerializeField] private 대신 사용
+
 [RequireComponent(typeof(Rigidbody))] //컴퍼넌트에 리지드바디 없어도 강제로 꼽아넣는거
 public class MoveControl : MonoBehaviour
 {
     [SerializeField] private float Speed;
     // [SerializeField] private float Force;
     private bool Move;
-    private Vector3 TargetPoint;
+    //private Vector3 TargetPoint;
+    [SerializeField] private GameObject TargetPoint;
     private Vector3 Step;
 
     private Rigidbody Rigid;
 
+    // public GameObject Target;
+    
     // 생성자 비슷
     void Awake()
     {
         Rigid = GetComponent<Rigidbody>();
+        TargetPoint = GameObject.Find("TagetPoint");
+        
     } //Rigidbodey = 물리엔진
 
     // 이니셜라이즈 비슷
     void Start()
     {
         Rigid.useGravity = false; //스크립트로 컴퍼넌트 받아와서 하는고
-        TargetPoint = this.transform.position;
+        TargetPoint.transform.position = this.transform.position;
         Step = new Vector3(0.0f, 0.0f);
         Speed = 15.0f;
        
@@ -91,6 +99,11 @@ public class MoveControl : MonoBehaviour
             Debug.Log("휠 클릭");
         }
          */
+
+
+        float Key = Input.GetAxis("Q");
+
+        Debug.Log("Q: " + Key);
         
          if(Input.GetMouseButton(1))
         {
@@ -100,68 +113,8 @@ public class MoveControl : MonoBehaviour
 
 
             // Ray가 타겟과 충돌했을 때 반환 값을 저장하는 곳
-            RaycastHit hit;
-
-            // 받아오기만 할때 out
-            // 입력만 할때 in
-            // Infinity : 무한
-            // if(Physics.Raycast(Ray 시작 위치와 방향, 충돌한 지점의 정보, Mathf.Infity : 무한한))
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity)) // ray의 위치와 방향으로부터 RayPoint를 무한정으로 발사하고 충돌이 일어나면 Hit에 정보를 저장함 
-            {
-                if (hit.transform.tag == "Ground")
-                {
-                    // ray의 위치로주터 hit된 위치까지 선을 그림
-                    Debug.DrawLine(ray.origin, hit.point);
-                    Debug.Log(hit.point);
-
-                    //transform.position = new Vector3(hit.point.x, 1.0f, hit.point.z);
-                    TargetPoint = hit.point;
-                }
-            }
-
-
-
-            if (this.transform.position.x > TargetPoint.x - 0.5f &&
-                this.transform.position.x < TargetPoint.x + 0.5f && 
-                this.transform.position.z > TargetPoint.z - 0.5f && 
-                this.transform.position.z < TargetPoint.z + 0.5f) 
-            {
-                Move = false;
-
-            }
-            else
-            {
-
-                Move = true;
-
-                Step = TargetPoint - this.transform.position;
-                Step.Normalize();
-                Step.y = 0;
-                
-            }
-
-             if(Move == true)
-            {
-                //this.transform.LookAt(Step);
-                this.transform.position += Step;
-
-                if (this.transform.position.x > TargetPoint.x - 0.5f &&
-                    this.transform.position.x < TargetPoint.x + 0.5f &&
-                    this.transform.position.z > TargetPoint.z - 0.5f &&
-                    this.transform.position.z < TargetPoint.z + 0.5f)
-                {
-                    Move = false;
-                    Step.y = 0;
-
-                }
-
-            }
-
-
             
-           
-            
-                
+
 
                 /*
                 //Vector3 Temp = ray.origin - hit.point;
@@ -180,7 +133,84 @@ public class MoveControl : MonoBehaviour
                 */
         }
 
+ 
+
+    void RayPoint(Ray _ray)
+    {
+            RaycastHit hit;
+
+            // 받아오기만 할때 out
+            // 입력만 할때 in
+            // Infinity : 무한
+            // if(Physics.Raycast(Ray 시작 위치와 방향, 충돌한 지점의 정보, Mathf.Infity : 무한한))
+            if (Physics.Raycast(_ray, out hit, Mathf.Infinity)) // ray의 위치와 방향으로부터 RayPoint를 무한정으로 발사하고 충돌이 일어나면 Hit에 정보를 저장함 
+            {
+                if (hit.transform.tag == "Ground")
+                {
+                    // ray의 위치로주터 hit된 위치까지 선을 그림
+                    Debug.DrawLine(_ray.origin, hit.point);
+                    Debug.Log(hit.point);
+
+                    //transform.position = new Vector3(hit.point.x, 1.0f, hit.point.z);
+                    TargetPoint.transform.position = hit.point;
+                }
+            }
 
 
+
+            //if (this.transform.position.x > TargetPoint.transform.position.x - 0.5f &&
+            //    this.transform.position.x < TargetPoint.transform.position.x + 0.5f && 
+            //    this.transform.position.z > TargetPoint.transform.position.z - 0.5f && 
+            //    this.transform.position.z < TargetPoint.transform.position.z + 0.5f) 
+            //{
+            //    Move = false;
+            //
+            //}
+            //else
+            //{
+
+            Move = true;
+
+            Step = TargetPoint.transform.position - this.transform.position;
+            Step.Normalize();
+            Step.y = 0;
+
+        }
+
+        if (Move == true)
+        {
+            //this.transform.LookAt(Step);
+            //this.transform.position += Step;
+            this.transform.position += Step * Time.deltaTime * Speed;
+
+            //if (this.transform.position.x > TargetPoint.transform.position.x - 0.5f &&
+            //    this.transform.position.x < TargetPoint.transform.position.x + 0.5f &&
+            //    this.transform.position.z > TargetPoint.transform.position.z - 0.5f &&
+            //    this.transform.position.z < TargetPoint.transform.position.z + 0.5f)
+            //{
+            if (Move == true)
+            {
+                Move = false;
+                Step.y = 0;
+            }
+
+
+        }
     }
+
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("OnTriggerEnter");
+    }
+
+    //private void OnDrawGizmos()
+    //{
+    //    
+    //        Gizmos.color = Color.blue;
+    //
+    //        Gizmos.DrawSphere(TargetPoint, 1.0f);
+    //}
+
 }
