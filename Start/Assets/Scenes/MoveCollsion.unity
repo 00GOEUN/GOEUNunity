@@ -597,7 +597,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 0
-  TargetPoint: {fileID: 0}
 --- !u!54 &1347699380
 Rigidbody:
   m_ObjectHideFlags: 0
