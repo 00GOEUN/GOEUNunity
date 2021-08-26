@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TagetrPoint : MonoBehaviour
 {
+    // ¿·±Ò ∏ÿ√„
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

@@ -88,7 +88,7 @@ public class MoveController : MonoBehaviour
             Obj.gameObject.SetActive(true);
         
             // 변경후 parent 를 EnablsList 하위에 포함시키고
-            Obj.transform.parent = GameObject.Find("EnablsList").transform;
+            //Obj.transform.parent = GameObject.Find("EnablsList").transform;
         
             // 활성화된 오브젝트를 관리하는 리스트에 포함시킴
             ObjectManager.GetInstance.GetEnableList.Add(Obj);

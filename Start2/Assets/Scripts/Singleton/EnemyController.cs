@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    private GameObject WayPoint;
+
+    private void Start()
+    {
+        WayPoint = this.transform.FindChild("WayPoint").gameObject;
+        WayPoint.transform.position = new Vector3(Random.Range(-25, 25), 0.0f, Random.Range(-25, 25));
+    }
 
     private void OnEnable()
     {
@@ -16,15 +23,15 @@ public class EnemyController : MonoBehaviour
         this.transform.parent = GameObject.Find("EnablsList").transform;
     }
 
-    // 충돌 했을 때
-    private void OnTriggerEnter(Collider other)
-    {
-        // t(시간) 후에 Obj(오브젝트) 삭제 : Destroy(Object Obj, [DefaultValue("0.0f")]float t) ; 
-        // 오브젝트 삭제 : Destroy(this.GameObject);
-        // 스크립트 삭제 : Destroy(this);
-        // 이 스크립트를 사용하는 게임 오브젝트 삭제
-        Destroy(this.gameObject);
-    }
+   //// 충돌 했을 때
+   //private void OnTriggerEnter(Collider other)
+   //{
+   //    // t(시간) 후에 Obj(오브젝트) 삭제 : Destroy(Object Obj, [DefaultValue("0.0f")]float t) ; 
+   //    // 오브젝트 삭제 : Destroy(this.GameObject);
+   //    // 스크립트 삭제 : Destroy(this);
+   //    // 이 스크립트를 사용하는 게임 오브젝트 삭제
+   //    Destroy(this.gameObject);
+   //}
 
     //
     //private void OnCollisionEnter(Collision collision)
